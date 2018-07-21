@@ -1,0 +1,89 @@
+.container .card{
+    /* border: 2px solid gray; */
+    padding:5px;
+    border-radius:10px;
+    background: white;
+    margin: 10px;
+    box-shadow: 5px 5px 30px rgb(209, 209, 209);
+}
+.container .card:hover{
+    /* box-shadow: 5px 5px 30px grey; */
+
+    
+    z-index:100;
+    -webkit-animation:scale .5s linear;
+    -moz-animation:scale .5s linear;
+    animation:scale .5s linear;
+    transform-origin:50% 50%;
+    animation-fill-mode: forwards;
+    
+}
+.navbar.navbar-inverse.myNavbar{
+    margin: 10px;
+    border-radius: 30px;
+    box-shadow: 5px 5px 10px gray;
+
+}
+
+.col-md-3 .card .card-img-top{
+    width: 100%;
+}
+.card .card-title{
+    color:gray;
+    align-items: center;
+}
+
+.card .card-text{
+    color:gray
+}
+
+
+.myNavbar  .nav .active a{
+    font-weight:bold;
+    background: rgb(32, 211, 86);
+    border-radius:50px;
+    
+}
+.myNavbar  .nav .active a:hover{
+    font-weight:bold;
+    background: rgb(32, 211, 86);
+    border-radius:100px;
+    z-index:100;
+    -webkit-animation:scale .1s linear;
+    -moz-animation:scale .1s linear;
+    animation:scale .1s linear;
+    transform-origin:50% 50%;
+    animation-fill-mode: forwards;
+    
+}
+
+.body {
+    /* background-image: url("../img/bg.jpg"); */
+    background-color: rgb(240, 240, 240);
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+
+
+ 
+ 
+ @keyframes scale{
+   0%{
+     transform:scale(1.0);
+   }
+   100%{
+     transform:scale(1.05);
+     -webkit-box-shadow: 10px 10px 60px 10px rgba(0,0,0,0.1);
+ -moz-box-shadow: 10px 10px 60px 10px rgba(0,0,0,0.1);
+ box-shadow: 10px 10px 60px 10px rgba(0,0,0,0.1);
+   }
+ }
+ 
+ @keyframes scaledown{
+   0%{
+     transform:scale(1.05);
+   }
+    100%{
+     transform:scale(1.0);
+   }
+ }
