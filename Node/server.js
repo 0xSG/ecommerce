@@ -112,13 +112,12 @@ app.post('/getproductsbycat',function(req,res){ //DD
     })
 });
 
-app.post('/createcart',function(req,res){
+app.post('/createcart',function(req,res){ //DD
     var cart = new carts();
     var body= req.body;
     if(Object.keys(body).length == 0 ){
         res.status(500).send({error:"internal error occured. please try again."});
     }else{
-        cart.products=body.products;
         cart.uid = body.uid;
         cart.save(function(err,result){
             if(err){
@@ -131,16 +130,39 @@ app.post('/createcart',function(req,res){
     
 });
 
-app.post('/addproducttocart',function(req,res){
-    
+app.post('/addproducttocart',function(req,res){//CART ID , PRODUCT ID //DD
+    var body= req.body;
+    carts.update({uid:body.uid},{ $push: { products: body.pid } },function(err,result){
+        if(err){
+            res.status(500).send({error:"internal error occured. please try again."});
+        }else{
+            res.status(200).send(result);
+        }
+    })
 });
 
-app.post('/getcartbyuser',function(req,res){
-    
+app.post('/getcartbyuser',function(req,res){ //DD
+    var body= req.body;
+    carts.find({uid:body.uid},function(err,result){
+        if(err){
+            res.status(500).send({error:"internal error occured. please try again."});
+        }else{
+            res.status(200).send(result);
+        }
+    });
 });
 
-app.post('/clearcart',function(req,res){
-    
+app.post('/clearcart',function(req,res){//DD
+    var body= req.body;
+    carts.update({uid:body.uid},{ $set: { "products" : [] } },function(err,result){
+        if(err){
+            res.status(500).send({error:"internal error occured. please try again."});
+        }else{
+            res.status(200).send(result);
+        }
+    });
+
+
 });
 
 app.post('/removeproductfromcart',function(req,res){
@@ -205,7 +227,7 @@ app.get('/getusers',function(req,res){//DD
     });
 });
 
-app.post('/deleteuser',function(req,res){
+app.post('/deleteuser',function(req,res){//DD
     var body = req.body;
     users.deleteOne({_id:body._id},function(err,result){
         if(err){
