@@ -1,3 +1,3 @@
 # Sarathi E-Commerce
 
-##Dev: Surya Gangaraj
+##Dev: SGK
