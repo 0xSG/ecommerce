@@ -5,8 +5,7 @@ var objId = mongoose.Schema.Types.ObjectId;
 var user = new schema({
     name:String,
     email:String,
-    Address:String,
-    uid:objId
+    address:String,
 });
 
 var model = mongoose.model('users',user);

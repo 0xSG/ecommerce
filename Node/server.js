@@ -2,6 +2,7 @@
 var express = require('express');
 var body_parser = require('body-parser');
 var mongoose = require('mongoose');
+
 // Configuring
 var app =  express();
 app.listen(3000,function(){
@@ -9,15 +10,18 @@ app.listen(3000,function(){
 })
 app.use(body_parser.json());
 mongoose.connect('mongodb://localhost:27017/ds-db');
+
 // Adding all requirements
 var products =  require ('../Node/Schema/products.js');
 var carts =  require ('../Node/Schema/carts.js');
 var users =  require ('../Node/Schema/users.js');
 var wishlists =  require ('../Node/Schema/wishlists.js');
+
 // Proccessing part
 app.get('/',function(req,res){ //DD
     res.send("Hi, you are in home");
 });
+
 app.get('/getproducts',function(req,res){ //DD
     products.find({},function(err,data){
         if(err){
@@ -110,7 +114,20 @@ app.post('/getproductsbycat',function(req,res){ //DD
 
 app.post('/createcart',function(req,res){
     var cart = new carts();
-    
+    var body= req.body;
+    if(Object.keys(body).length == 0 ){
+        res.status(500).send({error:"internal error occured. please try again."});
+    }else{
+        cart.products=body.products;
+        cart.uid = body.uid;
+        cart.save(function(err,result){
+            if(err){
+                res.status(500).send({error:"internal error occured. please try again."});
+            }else{
+                res.status(200).send(result);
+            }
+        })
+    }
     
 });
 
@@ -158,19 +175,45 @@ app.post('/auth',function(req,res){
     
 });
 
-app.post('/createuser',function(req,res){
+app.post('/createuser',function(req,res){//DD
     var body = req.body;
-    var user = new user();
+    var user = new users();
     if(Object.keys(req.body).length == 0 ){
         res.status(500).send({error:"internal error occured. please try again."});
     }else{
-        user.name=body.name;
+        user.name = body.name;
+        user.email = body.email;
+        user.address = body.address;
+        user.save(function(err,result){
+            if(err){
+                res.status(500).send({error:"internal error occured. please try again."});
+            }else{
+                res.status(200).send(result);
+            }
+        })
     }
     
 });
 
+app.get('/getusers',function(req,res){//DD
+    users.find({},function(err,result){
+        if(err){
+            res.status(500).send({error:"internal error occured. please try again."});
+        }else{
+            res.status(200).send(result);
+        }
+    });
+});
+
 app.post('/deleteuser',function(req,res){
-    
+    var body = req.body;
+    users.deleteOne({_id:body._id},function(err,result){
+        if(err){
+            res.status(500).send({error:"internal error occured. please try again."});
+        }else{
+            res.status(200).send(result);
+        }
+    });
 });
 
 
