@@ -327,14 +327,3 @@ app.post('/deleteuser',function(req,res){//DD
     });
 });
 
-
-
-/*
-
-if(err){
-            res.status(500).send({error:"internal error occured. please try again."});
-        }else{
-            res.status(200).send(data);
-        }
-
-*/
