@@ -3,12 +3,11 @@ var schema = mongoose.Schema;
 var objId = schema.Types.ObjectId;
 
 var wishlist= new schema ({
-    title:String,
-    id:objId,
-    products:[{
-        item : String
-         }],
-    uid:objId     
+    title:{type:String,default:'Untitled Wishlist'},
+    products:[
+        {pid:{type:objId,ref:'products'}}
+        ],
+    uid:{type:objId,ref:"users"}     
 });
 
 

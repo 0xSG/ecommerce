@@ -39,8 +39,9 @@ app.post('/addproduct',function(req,res){//add product to product list. //DD
         res.status(500).send({error:"internal error occured. please try again."});
     }else{
         prod.title = data.title;
-        prod.data = data.price;
-        prod.description = data.description;
+        prod.price = data.price;
+        if(Object.keys(data.description).length!=0)
+            prod.description = data.description;
         prod.save(function(err,result){
             if(err){
                 res.status(500).send({error:"internal error occured. please try again."});
@@ -132,17 +133,24 @@ app.post('/createcart',function(req,res){ //DD
 
 app.post('/addproducttocart',function(req,res){//CART ID , PRODUCT ID //DD
     var body= req.body;
-    carts.update({uid:body.uid},{ $push: { products: body.pid } },function(err,result){
+    if(Object.keys(body).length == 0 ){
+        res.status(500).send({error:"internal error occured. please try again."});
+    }else{
+    carts.update({uid:body.uid}, { $push: { products: {pid:body.pid} } },function(err,result){
         if(err){
             res.status(500).send({error:"internal error occured. please try again."});
         }else{
             res.status(200).send(result);
         }
     })
+    }
 });
 
 app.post('/getcartbyuser',function(req,res){ //DD
     var body= req.body;
+    if(Object.keys(body).length == 0 ){
+        res.status(500).send({error:"internal error occured. please try again."});
+    }else
     carts.find({uid:body.uid},function(err,result){
         if(err){
             res.status(500).send({error:"internal error occured. please try again."});
@@ -165,32 +173,113 @@ app.post('/clearcart',function(req,res){//DD
 
 });
 
-app.post('/removeproductfromcart',function(req,res){
-    
+app.post('/removeproductfromcart',function(req,res){//DD
+    var body= req.body;
+    if(Object.keys(body).length == 0 ){
+        res.status(500).send({error:"internal error occured. please try again."});
+    }else
+    carts.update({uid:body.uid},{ $pull: { "products" : body.pid } },function(err,result){
+        if(err){
+            res.status(500).send({error:"internal error occured. please try again."});
+        }else{
+            res.status(200).send(result);
+        }
+    });
 });
 
 app.post('checkout',function(req,res){
-    
+   
 });
 
-app.post('/createwishlist',function(req,res){
-    
+app.post('/createwishlist',function(req,res){//DD
+    var wishlist = new wishlists();
+    var body= req.body;
+    if(Object.keys(body).length == 0 ){
+        res.status(500).send({error:"internal error occured. please try again."});
+    }else{
+        wishlist.uid = body.uid;
+        wishlist.title = body.title;
+        wishlist.save(function(err,result){
+            if(err){
+                res.status(500).send({error:"internal error occured. please try again."});
+            }else{
+                res.status(200).send(result);
+            }
+        })
+    }
 });
 
-app.post('/getwishlist',function(req,res){
-    
+app.post('/getwishlist',function(req,res){//DD
+    var body= req.body;
+    if(Object.keys(body).length == 0 ){
+        res.status(500).send({error:"internal error occured. please try again."});
+    }else{
+        wishlists.find({uid:body.uid , _id:body._id},
+            function(err,result){
+                if(err){
+                    res.status(500).send({error:"internal error occured. please try again."});
+                }else{
+                    res.status(200).send(result);
+                }
+            })
+    }
 });
 
-app.post('/getwishlistsofuser',function(req,res){
-    
+app.post('/getwishlistsofuser',function(req,res){//DD
+    var body= req.body;
+    if(Object.keys(body).length == 0 ){
+        res.status(500).send({error:"internal error occured. please try again."});
+    }else{
+        wishlists.find({uid:body.uid},
+            function(err,result){
+                if(err){
+                    res.status(500).send({error:"internal error occured. please try again."});
+                }else{
+                    res.status(200).send(result);
+                }
+            })
+    }
 });
 
-app.post('/removeproductfromuser',function(req,res){
-    
+app.post('/addproducttowishlist',function(req,res){//CART ID , PRODUCT ID //DD
+    var body= req.body;
+    if(Object.keys(body).length == 0 ){
+        res.status(500).send({error:"internal error occured. please try again."});
+    }else{
+    wishlists.update({uid:body.uid,_id:body._id}, { $push: { products: {pid:body.pid} } },function(err,result){
+        if(err){
+            res.status(500).send({error:"internal error occured. please try again."});
+        }else{
+            res.status(200).send(result);
+        }
+    })
+    }
+});
+
+app.post('/removeproductfromwishlist',function(req,res){
+    var body= req.body;
+    if(Object.keys(body).length == 0 ){
+        res.status(500).send({error:"internal error occured. please try again."});
+    }else
+    wishlists.update({uid:body.uid,_id:body._id},{ $pull: { "products" : {pid:body.pid} } },function(err,result){
+        if(err){
+            res.status(500).send({error:"internal error occured. please try again."});
+        }else{
+            res.status(200).send(result);
+        }
+    });
 });
 
 app.post('/deletewishlist',function(req,res){
+    var body= req.body;
     
+    wishlists.update({uid:body.uid,_id:body._id},{ $pull: {} },function(err,result){
+        if(err){
+            res.status(500).send({error:"internal error occured. please try again."});
+        }else{
+            res.status(200).send(result);
+        }
+    });
 });
 
 app.post('/auth',function(req,res){
@@ -208,7 +297,7 @@ app.post('/createuser',function(req,res){//DD
         user.address = body.address;
         user.save(function(err,result){
             if(err){
-                res.status(500).send({error:"internal error occured. please try again."});
+                res.status(500).send({error:"internal error occured. please try again.",err});
             }else{
                 res.status(200).send(result);
             }
