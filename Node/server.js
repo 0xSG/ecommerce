@@ -16,7 +16,7 @@ var products =  require ('../Node/Schema/products.js');
 var carts =  require ('../Node/Schema/carts.js');
 var users =  require ('../Node/Schema/users.js');
 var wishlists =  require ('../Node/Schema/wishlists.js');
-
+//var temp =  require ('../Node/dev/0xpulsar/wishlists.js');
 // Proccessing part
 app.get('/',function(req,res){ //DD
     res.send("Hi, you are in home");
